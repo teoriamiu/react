@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-
+  
   <meta charset="UTF-8">
-
+  
   <!-- DESCRIPCIÓN SEMÁNTICA DEL DOCUMENTO -->
   <meta name="description" content="Clase completa de React enfocada en componentes, estado, render declarativo y arquitectura de interfaces modernas con JavaScript.">
   <meta name="keywords" content="React, componentes, estado, SPA, interfaz declarativa, frontend moderno, JavaScript, arquitectura UI">
   <meta name="author" content="Clase de Programación">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  
   <!-- SOPORTE DE ESQUEMAS DE COLOR -->
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#1e1e1e">
-
+  
   <!-- URL CANÓNICA -->
   <link rel="canonical" href="https://tuti-react.netlify.app/">
-
+  
   <!-- FAVICON -->
   <link rel="icon" href="https://i.imgur.com/NOUbKB6.jpeg">
-
+  
   <!-- OPEN GRAPH (REDES SOCIALES) -->
   <meta property="og:title" content="Clase completa de React">
   <meta property="og:description" content="Curso práctico de React para entender componentes, estado y render declarativo en interfaces web modernas.">
@@ -29,372 +30,545 @@
   <meta property="og:image:alt" content="Clase completa de React: componentes, estado y arquitectura de interfaces">
   <meta property="og:url" content="https://tuti-react.netlify.app/">
   <meta property="og:type" content="website">
-
+  
   <title>Clase completa de React</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.1.0/css/all.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.54.0-dev-20250930/min/vs/editor/editor.main.css"/>
-<style>
-:root { --toolbar-h: 42px; }
-* { box-sizing: border-box; }
-html, body, #root { margin: 0; height: 100%; }
-body { background: #111; font-family: system-ui, sans-serif; }
-h1 { margin: 0; font-size: 16px; color: #fff; font-weight: 600; }
-
-#app { display: flex; flex-direction: column; height: 100%; }
-#toolbar { height: var(--toolbar-h); display: flex; align-items: center; padding: 0 10px; background: #1e1e1e; }
-.toolbar-actions { margin-left: auto; display: flex; gap: 2px; }
-#toolbar button { background: #007acc; border: none; color: #fff; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 0; }
-#toolbar button:hover { background: #005a99; }
-
-#workspace { flex: 1; display: flex; flex-direction: row; overflow: hidden; min-height:0; }
-#workspace[data-view="editor"] #editor,
-#workspace[data-view="preview"] #preview,
-#workspace[data-view="split"] #editor,
-#workspace[data-view="split"] #preview { min-height:0; }
-
-#workspace[data-view="editor"] #editor { flex: 1; }
-#workspace[data-view="editor"] #preview { display: none; }
-
-#workspace[data-view="preview"] #preview { flex: 1; }
-#workspace[data-view="preview"] #editor { display: none; }
-
-#workspace[data-view="split"] #editor,
-#workspace[data-view="split"] #preview { flex: 1; display: block; }
-
-#workspace[data-view="split"] { flex-direction: row; }
-@media (max-width:768px){
-  #workspace[data-view="split"] { flex-direction: column; }
-}
-
-#editor { min-height: 0; }
-#preview { border: none; width: 100%; height: 100%; }
-
-#modalLoadHTML { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 9999; }
-#modalLoadHTML .modal-content { background: #1e1e1e; padding:16px; border-radius:8px; width:90%; max-width:700px; display:flex; flex-direction:column; gap:8px;color:white; }
-#modalLoadHTML textarea { width:100%; height:150px; background:#111; color:#fff; border:1px solid #444; border-radius:4px; font-family:monospace; padding:8px; resize:vertical; }
-#modalLoadHTML .modal-buttons { display:flex; justify-content:flex-end; gap:8px; }
-#modalLoadHTML button { padding:6px 12px; border-radius:4px; border:none; cursor:pointer; background:#007acc; color:#fff; }
-#modalLoadHTML button:hover { background:#005a99; }
-
-</style>
-</head>
-<body>
-<div id="root"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.0/umd/react.development.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.0/umd/react-dom.development.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.54.0-dev-20250930/min/vs/loader.js"></script>
-<script>
-const { useState, useEffect, useRef } = React;
-
-const initialHTML =
-  `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-
-  <!-- SEO SEMÁNTICO -->
-  <meta name="description" content="Clase completa de React: fundamentos, estado, componentes, efectos y arquitectura de interfaces modernas explicadas paso a paso en un único documento educativo.">
-  <meta name="keywords" content="React, JavaScript, interfaces, SPA, componentes, useState, useEffect, frontend moderno">
-  <meta name="author" content="Clase de Programación Web">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- INDEXACIÓN -->
-  <meta name="robots" content="index, follow">
-
-  <!-- CANONICAL -->
-  <link rel="canonical" href="https://tuti-react.netlify.app/">
-
-  <!-- OPEN GRAPH -->
-  <meta property="og:title" content="Clase completa de React – Arquitectura de Interfaces Modernas">
-  <meta property="og:description" content="Documento educativo que enseña React desde sus fundamentos hasta el pensamiento declarativo moderno, sin tooling externo.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://tuti-react.netlify.app/">
-  <meta property="og:image" content="https://i.imgur.com/ahi09Lu.jpeg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Clase completa de React con capítulos integrados">
-
-  <title>Clase completa de React</title>
-
+  
   <style>
-    :root{
-      --bg:#f0f2f5;
-      --card:#ffffff;
-      --text:#1c1e21;
-      --muted:#606770;
-      --primary:#1877f2;
-      --radius:14px;
-      --shadow:0 6px 18px rgba(0,0,0,.1);
-    }
-    @media (prefers-color-scheme: dark){
-      :root{
-        --bg:#18191a;
-        --card:#242526;
-        --text:#e4e6eb;
-        --muted:#b0b3b8;
-        --primary:#2d88ff;
-        --shadow:0 6px 20px rgba(0,0,0,.4);
-      }
-    }
-    *{box-sizing:border-box}
-    html,body,#root{margin:0;height:100%}
-    body{
-      background:var(--bg);
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-      color:var(--text);
-    }
-    header{
-      padding:16px;
-      text-align:center;
-      background:var(--card);
-      box-shadow:var(--shadow);
-    }
-    header h1{margin:0;font-size:22px}
-    header p{margin:4px 0 0;color:var(--muted);font-size:14px}
+    :root{--bg:#f0f2f5;--card:#fff;--text:#1c1e21;--muted:#65676b;--primary:#1877f2;--success:#42b72a;--danger:#e4405f;--warning:#f59e0b;--shadow:0 4px 12px rgba(0,0,0,.08);--radius:14px;--header-h:56px;}
+    @media (prefers-color-scheme: dark){:root{--bg:#18191a;--card:#242526;--text:#e4e6eb;--muted:#b0b3b8;--primary:#2d88ff;--shadow:0 4px 14px rgba(0,0,0,.35);}}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body,#root{width:100%;height:100%;overflow:hidden}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;line-height:1.5}
 
-    main{padding:16px;max-width:900px;margin:auto}
-    section{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:16px;
-      margin-bottom:16px;
-      box-shadow:var(--shadow);
-    }
-    section h2{margin-top:0;font-size:18px}
-    section p{line-height:1.5}
-    button{
-      padding:10px 14px;
-      border-radius:10px;
-      border:0;
-      background:var(--primary);
-      color:#fff;
-      cursor:pointer;
-      font-size:14px;
-    }
-    button.secondary{
-      background:transparent;
-      color:var(--primary);
-      border:1px solid var(--primary);
-    }
-    .counter{
-      font-size:24px;
-      margin:8px 0;
-    }
-    footer{
-      text-align:center;
-      padding:16px;
-      color:var(--muted);
-      font-size:13px;
-    }
+    .screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg)}
+    .header{height:var(--header-h);display:flex;align-items:center;padding:0 14px;background:var(--card);box-shadow:var(--shadow);position:sticky;top:0;z-index:10}
+    .header h1{flex:1;text-align:center;font-size:18px;font-weight:600}
+    .back{border:0;background:none;color:var(--primary);font-size:20px;cursor:pointer;padding:8px;min-width:40px}
+    .content{flex:1;overflow-y:auto;padding:16px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
+    .nav-btn{width:100%;padding:14px;border-radius:10px;border:0;background:var(--primary);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+    .nav-btn:hover{opacity:.9;transform:scale(1.02)}
+    .nav-btn:active{transform:scale(.98)}
+    
+    .input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:15px;margin:8px 0;background:var(--bg);color:var(--text)}
+    .input:focus{outline:none;border-color:var(--primary)}
+    .btn-group{display:flex;gap:8px;margin-top:12px}
+    .btn{padding:10px 16px;border-radius:8px;border:0;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-success{background:var(--success);color:#fff}
+    .btn-danger{background:var(--danger);color:#fff}
+    .btn-warning{background:var(--warning);color:#fff}
+    .btn:hover{opacity:.9}
+    
+    .list-item{padding:12px;background:var(--bg);border-radius:8px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
+    .badge{padding:4px 12px;border-radius:12px;font-size:13px;font-weight:600}
+    .badge-primary{background:var(--primary);color:#fff}
+    .badge-success{background:var(--success);color:#fff}
+    .badge-danger{background:var(--danger);color:#fff}
+    
+    .counter{text-align:center;padding:20px}
+    .counter-display{font-size:48px;font-weight:bold;color:var(--primary);margin:20px 0}
+    
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+    .grid-item{background:var(--bg);padding:20px;border-radius:10px;text-align:center;cursor:pointer;transition:all .2s}
+    .grid-item:hover{background:var(--primary);color:#fff;transform:translateY(-2px)}
+    
+    .alert{padding:12px;border-radius:8px;margin:12px 0}
+    .alert-info{background:#e3f2fd;color:#1976d2}
+    .alert-success{background:#e8f5e9;color:#2e7d32}
+    .alert-warning{background:#fff3e0;color:#f57c00}
+    .alert-error{background:#ffebee;color:#c62828}
+    
+    .progress{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden;margin:12px 0}
+    .progress-bar{height:100%;background:var(--primary);transition:width .3s}
+    
+    .loading{display:inline-block;width:20px;height:20px;border:3px solid #f3f3f3;border-top:3px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    label{display:block;margin:12px 0 4px;font-weight:600;font-size:14px}
+    select{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:15px;background:var(--card);color:var(--text)}
+    textarea{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:15px;min-height:100px;font-family:inherit;background:var(--bg);color:var(--text)}
+    
+    .toggle{position:relative;display:inline-block;width:50px;height:26px}
+    .toggle input{opacity:0;width:0;height:0}
+    .slider{position:absolute;inset:0;background:#ccc;border-radius:26px;transition:.3s;cursor:pointer}
+    .slider:before{content:"";position:absolute;height:18px;width:18px;left:4px;bottom:4px;background:#fff;border-radius:50%;transition:.3s}
+    input:checked + .slider{background:var(--primary)}
+    input:checked + .slider:before{transform:translateX(24px)}
+    
+    .flex{display:flex;gap:8px;align-items:center}
+    .flex-col{display:flex;flex-direction:column;gap:8px}
+    p{margin:8px 0}
+    h2{font-size:20px;margin:16px 0 12px;color:var(--text)}
+    h3{font-size:16px;margin:12px 0 8px;color:var(--text)}
+    small{color:var(--muted);font-size:13px}
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>Clase completa de React</h1>
-    <p>De JavaScript imperativo a interfaces declarativas</p>
-  </header>
+  <div id="root"></div>
 
-  <main id="root"></main>
-
-  <footer>
-    Documento educativo · React sin tooling · Pensamiento declarativo
-  </footer>
-
-  <!-- REACT CDN -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
   <script>
     const e = React.createElement;
+    const {useState, useEffect, useReducer, useRef, useMemo, useCallback} = React;
 
-    /* ============================================================
-       CAPÍTULO 1 – React como idea
-    ============================================================ */
-    const Cap1 = () =>
-      e("section",null,
-        e("h2",null,"Capítulo 1 · ¿Qué es React?"),
-        e("p",null,
-          "React no es un lenguaje ni un framework completo. Es una biblioteca que propone una forma distinta de construir interfaces: describiendo qué debería verse para un estado dado."
+    // Screen Component con navegación
+    const Screen = ({title, back, children}) =>
+      e("section", {className: "screen"},
+        e("div", {className: "header"},
+          back ? e("button", {className: "back", onClick: back}, "←") : e("span"),
+          e("h1", null, title),
+          e("span")
+        ),
+        e("div", {className: "content"}, children)
+      );
+
+    // Helper components
+    const C = (...c) => e("div", {className: "card"}, ...c);
+    const B = (txt, fn, cls = "nav-btn") => e("button", {className: cls, onClick: fn}, txt);
+
+    // COMPONENTE: useState básico con contador
+    function CounterExample() {
+      const [count, setCount] = useState(0);
+      const [step, setStep] = useState(1);
+
+      return C(
+        e("h2", null, "useState - Contador"),
+        e("div", {className: "counter"},
+          e("div", {className: "counter-display"}, count),
+          e("div", {className: "btn-group"},
+            B(`-${step}`, () => setCount(count - step), "btn btn-danger"),
+            B("Reset", () => setCount(0), "btn btn-warning"),
+            B(`+${step}`, () => setCount(count + step), "btn btn-success")
+          ),
+          e("label", null, "Paso:"),
+          e("input", {
+            type: "number",
+            className: "input",
+            value: step,
+            onChange: (ev) => setStep(Number(ev.target.value) || 1)
+          })
         )
       );
+    }
 
-    /* ============================================================
-       CAPÍTULO 2 – Componentes
-    ============================================================ */
-    const Cap2 = () =>
-      e("section",null,
-        e("h2",null,"Capítulo 2 · Componentes"),
-        e("p",null,
-          "Un componente es una función pura: recibe datos y devuelve una descripción de la interfaz. No manipula el DOM directamente."
+    // COMPONENTE: Formulario controlado
+    function FormExample() {
+      const [form, setForm] = useState({name: "", email: "", age: "", country: ""});
+      const [submitted, setSubmitted] = useState(null);
+
+      const handleChange = (field) => (e) => {
+        setForm({...form, [field]: e.target.value});
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        setSubmitted(form);
+      };
+
+      return C(
+        e("h2", null, "Formularios Controlados"),
+        e("form", {onSubmit: handleSubmit},
+          e("label", null, "Nombre:"),
+          e("input", {
+            className: "input",
+            value: form.name,
+            onChange: handleChange("name"),
+            placeholder: "Tu nombre",
+            required: true
+          }),
+          e("label", null, "Email:"),
+          e("input", {
+            type: "email",
+            className: "input",
+            value: form.email,
+            onChange: handleChange("email"),
+            placeholder: "tu@email.com",
+            required: true
+          }),
+          e("label", null, "Edad:"),
+          e("input", {
+            type: "number",
+            className: "input",
+            value: form.age,
+            onChange: handleChange("age"),
+            placeholder: "25"
+          }),
+          e("label", null, "País:"),
+          e("select", {
+            className: "input",
+            value: form.country,
+            onChange: handleChange("country")
+          },
+            e("option", {value: ""}, "Selecciona..."),
+            e("option", {value: "ar"}, "Argentina"),
+            e("option", {value: "mx"}, "México"),
+            e("option", {value: "es"}, "España"),
+            e("option", {value: "co"}, "Colombia")
+          ),
+          e("div", {className: "btn-group"},
+            B("Enviar", null, "btn btn-primary")
+          )
+        ),
+        submitted && e("div", {className: "alert alert-success"},
+          e("strong", null, "Datos enviados:"),
+          e("p", null, `Nombre: ${submitted.name}`),
+          e("p", null, `Email: ${submitted.email}`),
+          e("p", null, `Edad: ${submitted.age || "No especificada"}`),
+          e("p", null, `País: ${submitted.country || "No especificado"}`)
         )
       );
+    }
 
-    /* ============================================================
-       CAPÍTULO 3 – Estado
-    ============================================================ */
-    const Cap3 = () => {
-      const [count,setCount] = React.useState(0);
-      return e("section",null,
-        e("h2",null,"Capítulo 3 · Estado"),
-        e("p",null,"El estado representa información viva. Cuando cambia, React recalcula la interfaz."),
-        e("div",{className:"counter"},"Contador: ",count),
-        e("button",{onClick:()=>setCount(c=>c+1)},"Incrementar")
+    // COMPONENTE: Lista dinámica con add/remove
+    function ListExample() {
+      const [items, setItems] = useState([
+        {id: 1, text: "Aprender React", done: false},
+        {id: 2, text: "Practicar Hooks", done: true},
+        {id: 3, text: "Crear proyecto", done: false}
+      ]);
+      const [newItem, setNewItem] = useState("");
+
+      const addItem = () => {
+        if (!newItem.trim()) return;
+        setItems([...items, {id: Date.now(), text: newItem, done: false}]);
+        setNewItem("");
+      };
+
+      const toggleDone = (id) => {
+        setItems(items.map(item => 
+          item.id === id ? {...item, done: !item.done} : item
+        ));
+      };
+
+      const removeItem = (id) => {
+        setItems(items.filter(item => item.id !== id));
+      };
+
+      return C(
+        e("h2", null, "Listas Dinámicas"),
+        e("div", {className: "flex"},
+          e("input", {
+            className: "input",
+            value: newItem,
+            onChange: (ev) => setNewItem(ev.target.value),
+            onKeyPress: (ev) => ev.key === "Enter" && addItem(),
+            placeholder: "Nueva tarea..."
+          }),
+          B("Agregar", addItem, "btn btn-primary")
+        ),
+        e("div", null,
+          items.map(item =>
+            e("div", {key: item.id, className: "list-item"},
+              e("span", {
+                style: {textDecoration: item.done ? "line-through" : "none"}
+              }, item.text),
+              e("div", {className: "btn-group"},
+                B(item.done ? "✓" : "○", () => toggleDone(item.id), 
+                  item.done ? "btn btn-success" : "btn btn-warning"),
+                B("✕", () => removeItem(item.id), "btn btn-danger")
+              )
+            )
+          )
+        ),
+        e("p", null, e("small", null, `Total: ${items.length} | Completadas: ${items.filter(i => i.done).length}`))
       );
-    };
+    }
 
-    /* ============================================================
-       CAPÍTULO 4 – Renderizado condicional
-    ============================================================ */
-    const Cap4 = () => {
-      const [show,setShow] = React.useState(true);
-      return e("section",null,
-        e("h2",null,"Capítulo 4 · Renderizado condicional"),
-        e("button",{onClick:()=>setShow(s=>!s)},"Alternar"),
-        show && e("p",null,"Este contenido existe solo si el estado lo permite.")
+    // COMPONENTE: useEffect con fetch simulado
+    function EffectExample() {
+      const [data, setData] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [filter, setFilter] = useState("all");
+
+      useEffect(() => {
+        setLoading(true);
+        // Simular API call
+        const timer = setTimeout(() => {
+          setData([
+            {id: 1, name: "Usuario 1", status: "active"},
+            {id: 2, name: "Usuario 2", status: "inactive"},
+            {id: 3, name: "Usuario 3", status: "active"},
+            {id: 4, name: "Usuario 4", status: "pending"},
+            {id: 5, name: "Usuario 5", status: "active"}
+          ]);
+          setLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      }, []);
+
+      const filtered = filter === "all" ? data : data.filter(d => d.status === filter);
+
+      return C(
+        e("h2", null, "useEffect - Fetch Data"),
+        e("div", {className: "btn-group"},
+          B("Todos", () => setFilter("all"), filter === "all" ? "btn btn-primary" : "btn btn-warning"),
+          B("Activos", () => setFilter("active"), filter === "active" ? "btn btn-success" : "btn btn-warning"),
+          B("Inactivos", () => setFilter("inactive"), filter === "inactive" ? "btn btn-danger" : "btn btn-warning"),
+          B("Pendientes", () => setFilter("pending"), filter === "pending" ? "btn btn-warning" : "btn btn-warning")
+        ),
+        loading ? 
+          e("div", {style: {textAlign: "center", padding: "40px"}},
+            e("div", {className: "loading"}),
+            e("p", null, "Cargando datos...")
+          ) :
+          e("div", null,
+            filtered.map(item =>
+              e("div", {key: item.id, className: "list-item"},
+                e("span", null, item.name),
+                e("span", {
+                  className: `badge badge-${
+                    item.status === "active" ? "success" : 
+                    item.status === "inactive" ? "danger" : "primary"
+                  }`
+                }, item.status)
+              )
+            ),
+            e("p", null, e("small", null, `Mostrando ${filtered.length} de ${data.length} usuarios`))
+          )
       );
-    };
+    }
 
-    /* ============================================================
-       CAPÍTULO 5 – Listas
-    ============================================================ */
-    const Cap5 = () => {
-      const items = ["Declarativo","Componentes","Estado","Efectos"];
-      return e("section",null,
-        e("h2",null,"Capítulo 5 · Listas"),
-        e("ul",null,
-          items.map((it,i)=>e("li",{key:i},it))
-        )
-      );
-    };
+    // COMPONENTE: useReducer para estado complejo
+    function ReducerExample() {
+      const reducer = (state, action) => {
+        switch(action.type) {
+          case "increment": return {...state, count: state.count + 1};
+          case "decrement": return {...state, count: state.count - 1};
+          case "multiply": return {...state, count: state.count * 2};
+          case "divide": return {...state, count: Math.floor(state.count / 2)};
+          case "reset": return {count: 0, history: []};
+          case "add_history": 
+            return {...state, history: [...state.history, action.payload]};
+          default: return state;
+        }
+      };
 
-    /* ============================================================
-       CAPÍTULO 6 – Efectos
-    ============================================================ */
-    const Cap6 = () => {
-      const [time,setTime] = React.useState(new Date().toLocaleTimeString());
-      React.useEffect(()=>{
-        const id = setInterval(
-          ()=>setTime(new Date().toLocaleTimeString()),1000
-        );
-        return ()=>clearInterval(id);
-      },[]);
-      return e("section",null,
-        e("h2",null,"Capítulo 6 · useEffect"),
-        e("p",null,"Sincronización con el mundo externo."),
-        e("strong",null,time)
-      );
-    };
+      const [state, dispatch] = useReducer(reducer, {count: 0, history: []});
 
-    /* ============================================================
-       CAPÍTULO 7 – Arquitectura mental
-    ============================================================ */
-    const Cap7 = () =>
-      e("section",null,
-        e("h2",null,"Capítulo 7 · Pensar en React"),
-        e("p",null,
-          "React no trata sobre el DOM. Trata sobre modelar estados y dejar que la interfaz emerja como consecuencia lógica."
-        )
-      );
+      const doAction = (type, label) => {
+        dispatch({type});
+        dispatch({type: "add_history", payload: `${label}: ${state.count} → ${
+          type === "increment" ? state.count + 1 :
+          type === "decrement" ? state.count - 1 :
+          type === "multiply" ? state.count * 2 :
+          type === "divide" ? Math.floor(state.count / 2) : 0
+        }`});
+      };
 
-    /* ============================================================
-       APP
-    ============================================================ */
-    const App = () =>
-      e(React.Fragment,null,
-        e(Cap1),
-        e(Cap2),
-        e(Cap3),
-        e(Cap4),
-        e(Cap5),
-        e(Cap6),
-        e(Cap7)
-      );
-
-    ReactDOM.createRoot(document.getElementById("root"))
-      .render(e(App));
-  <\/script>
-</body>
-</html>`;
-
-function App() {
-  const [view, setView] = useState('split');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [textareaValue, setTextareaValue] = useState('');
-  const editorRef = useRef(null);
-  const iframeRef = useRef(null);
-
-  const renderPreview = (html) => {
-    if (iframeRef.current) iframeRef.current.srcdoc = html;
-  };
-
-  useEffect(() => {
-    require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.54.0-dev-20250930/min/vs' } });
-    require(['vs/editor/editor.main'], () => {
-      editorRef.current = monaco.editor.create(document.getElementById('editor'), {
-        value: initialHTML,
-        language: 'html',
-        theme: 'vs-dark',
-        wordWrap: 'on',
-        minimap: { enabled: true },
-        automaticLayout: true
-      });
-      renderPreview(initialHTML);
-      const debounce = (fn, delay=300) => { let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), delay); }; };
-      editorRef.current.onDidChangeModelContent(debounce(()=> renderPreview(editorRef.current.getValue()), 250));
-    });
-  }, []);
-
-  const openModal = () => {
-    setTextareaValue(editorRef.current.getValue());
-    setModalOpen(true);
-  };
-
-  const loadHTML = () => {
-    editorRef.current.setValue(textareaValue);
-    renderPreview(textareaValue);
-    setView('split');
-    setModalOpen(false);
-  };
-
-  const switchView = (newView) => {
-    setView(newView);
-    setTimeout(() => editorRef.current?.layout(), 50);
-  };
-
-  return (
-    React.createElement('div', {id:'app'},
-      React.createElement('div', {id:'toolbar'},
-        React.createElement('h1', null, 'Vs-Kode'),
-        React.createElement('div', {className:'toolbar-actions'},
-          React.createElement('button', {onClick:()=>switchView('split')}, React.createElement('i',{className:'fa-solid fa-columns'}), ' Split'),
-          React.createElement('button', {onClick:()=>switchView('editor')}, React.createElement('i',{className:'fa-solid fa-code'}), ' Editor'),
-          React.createElement('button', {onClick:()=>switchView('preview')}, React.createElement('i',{className:'fa-solid fa-eye'}), ' Preview'),
-          React.createElement('button', {onClick:openModal}, React.createElement('i',{className:'fa-solid fa-file-import'}), ' Cargar HTML')
-        )
-      ),
-      React.createElement('div', {id:'workspace', 'data-view':view},
-        React.createElement('div', {id:'editor'}),
-        React.createElement('iframe', {id:'preview', ref:iframeRef})
-      ),
-      modalOpen && React.createElement('div', {id:'modalLoadHTML', style:{display:'flex'}},
-        React.createElement('div', {className:'modal-content'},
-          React.createElement('h2', null, 'Pega tu HTML'),
-          React.createElement('textarea', {value:textareaValue, onChange:e=>setTextareaValue(e.target.value)}),
-          React.createElement('div', {className:'modal-buttons'},
-            React.createElement('button', {onClick:()=>setModalOpen(false)}, 'Cancelar'),
-            React.createElement('button', {onClick:loadHTML}, 'Cargar')
+      return C(
+        e("h2", null, "useReducer - Estado Complejo"),
+        e("div", {className: "counter-display"}, state.count),
+        e("div", {className: "grid"},
+          e("div", {className: "grid-item", onClick: () => doAction("increment", "+1")}, "+1"),
+          e("div", {className: "grid-item", onClick: () => doAction("decrement", "-1")}, "-1"),
+          e("div", {className: "grid-item", onClick: () => doAction("multiply", "×2")}, "×2"),
+          e("div", {className: "grid-item", onClick: () => doAction("divide", "÷2")}, "÷2")
+        ),
+        B("Reset", () => dispatch({type: "reset"}), "btn btn-danger"),
+        state.history.length > 0 && e("div", null,
+          e("h3", null, "Historial:"),
+          ...state.history.slice(-5).reverse().map((h, i) =>
+            e("div", {key: i, className: "alert alert-info"}, h)
           )
         )
-      )
-    )
-  );
-}
+      );
+    }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
-</script>
+    // COMPONENTE: useRef y DOM manipulation
+    function RefExample() {
+      const inputRef = useRef(null);
+      const [value, setValue] = useState("");
+      const renderCount = useRef(0);
+
+      useEffect(() => {
+        renderCount.current += 1;
+      });
+
+      const focusInput = () => inputRef.current?.focus();
+      const clearInput = () => {
+        setValue("");
+        inputRef.current?.focus();
+      };
+
+      return C(
+        e("h2", null, "useRef - Referencias DOM"),
+        e("p", null, e("small", null, `Renders: ${renderCount.current}`)),
+        e("input", {
+          ref: inputRef,
+          className: "input",
+          value: value,
+          onChange: (ev) => setValue(ev.target.value),
+          placeholder: "Escribe algo..."
+        }),
+        e("div", {className: "btn-group"},
+          B("Focus", focusInput, "btn btn-primary"),
+          B("Limpiar", clearInput, "btn btn-warning")
+        ),
+        e("p", null, `Valor actual: "${value}"`)
+      );
+    }
+
+    // COMPONENTE: Conditional Rendering
+    function ConditionalExample() {
+      const [show, setShow] = useState(true);
+      const [mode, setMode] = useState("info");
+
+      return C(
+        e("h2", null, "Renderizado Condicional"),
+        e("label", {className: "flex"},
+          e("span", {className: "toggle"},
+            e("input", {
+              type: "checkbox",
+              checked: show,
+              onChange: (ev) => setShow(ev.target.checked)
+            }),
+            e("span", {className: "slider"})
+          ),
+          e("span", null, show ? "Mostrar contenido" : "Ocultar contenido")
+        ),
+        e("label", null, "Tipo de alerta:"),
+        e("select", {
+          className: "input",
+          value: mode,
+          onChange: (ev) => setMode(ev.target.value)
+        },
+          e("option", {value: "info"}, "Info"),
+          e("option", {value: "success"}, "Success"),
+          e("option", {value: "warning"}, "Warning"),
+          e("option", {value: "error"}, "Error")
+        ),
+        show && e("div", {className: `alert alert-${mode}`},
+          mode === "info" && "Esta es una alerta informativa",
+          mode === "success" && "¡Operación exitosa!",
+          mode === "warning" && "Advertencia: Revisa esta información",
+          mode === "error" && "Error: Algo salió mal"
+        )
+      );
+    }
+
+    // COMPONENTE: useMemo y useCallback
+    function MemoExample() {
+      const [count, setCount] = useState(0);
+      const [input, setInput] = useState("");
+
+      // Cálculo costoso simulado
+      const expensiveCalc = useMemo(() => {
+        console.log("Calculando...");
+        let result = 0;
+        for(let i = 0; i < 1000000; i++) result += count;
+        return result;
+      }, [count]);
+
+      const handleClick = useCallback(() => {
+        setCount(c => c + 1);
+      }, []);
+
+      return C(
+        e("h2", null, "useMemo & useCallback"),
+        e("p", null, "useMemo previene recálculos innecesarios"),
+        e("input", {
+          className: "input",
+          value: input,
+          onChange: (ev) => setInput(ev.target.value),
+          placeholder: "Escribe (no recalcula)..."
+        }),
+        e("p", null, `Count: ${count}`),
+        e("p", null, `Cálculo costoso: ${expensiveCalc.toLocaleString()}`),
+        B("Incrementar", handleClick, "btn btn-primary"),
+        e("p", null, e("small", null, "Abre la consola para ver cuándo se recalcula"))
+      );
+    }
+
+    // COMPONENTE: Progress bar
+    function ProgressExample() {
+      const [progress, setProgress] = useState(0);
+      const [running, setRunning] = useState(false);
+
+      useEffect(() => {
+        if (!running) return;
+        
+        const interval = setInterval(() => {
+          setProgress(p => {
+            if (p >= 100) {
+              setRunning(false);
+              return 100;
+            }
+            return p + 1;
+          });
+        }, 50);
+
+        return () => clearInterval(interval);
+      }, [running]);
+
+      const start = () => {
+        setProgress(0);
+        setRunning(true);
+      };
+
+      return C(
+        e("h2", null, "Progress & Timer"),
+        e("div", {className: "progress"},
+          e("div", {
+            className: "progress-bar",
+            style: {width: `${progress}%`}
+          })
+        ),
+        e("p", null, `${progress}%`),
+        e("div", {className: "btn-group"},
+          B("Iniciar", start, "btn btn-success"),
+          B("Pausar", () => setRunning(false), "btn btn-warning"),
+          B("Reset", () => {setProgress(0); setRunning(false);}, "btn btn-danger")
+        )
+      );
+    }
+
+    // APP PRINCIPAL con navegación
+    function App() {
+      const [stack, setStack] = useState(["home"]);
+      
+      const go = (id) => setStack(s => [...s, id]);
+      const back = () => setStack(s => s.slice(0, -1));
+      const cur = stack.at(-1);
+
+      const S = (title, opts, ...children) => 
+        e(Screen, {title, ...opts}, ...children);
+
+      const screens = {
+        home: S("React - Clase Completa", {},
+          C(
+            e("h2", null, "📚 Temas Disponibles"),
+            e("p", null, "Explora todos los conceptos fundamentales de React")
+          ),
+          C(B("useState - Estado Básico", () => go("state"))),
+          C(B("Formularios Controlados", () => go("forms"))),
+          C(B("Listas Dinámicas", () => go("lists"))),
+          C(B("useEffect - Efectos", () => go("effects"))),
+          C(B("useReducer - Estado Complejo", () => go("reducer"))),
+          C(B("useRef - Referencias", () => go("refs"))),
+          C(B("Renderizado Condicional", () => go("conditional"))),
+          C(B("useMemo & useCallback", () => go("memo"))),
+          C(B("Progress & Timers", () => go("progress")))
+        ),
+        state: S("useState", {back}, e(CounterExample)),
+        forms: S("Formularios", {back}, e(FormExample)),
+        lists: S("Listas", {back}, e(ListExample)),
+        effects: S("useEffect", {back}, e(EffectExample)),
+        reducer: S("useReducer", {back}, e(ReducerExample)),
+        refs: S("useRef", {back}, e(RefExample)),
+        conditional: S("Condicional", {back}, e(ConditionalExample)),
+        memo: S("Optimización", {back}, e(MemoExample)),
+        progress: S("Progress", {back}, e(ProgressExample))
+      };
+
+      return screens[cur] || screens.home;
+    }
+
+    ReactDOM.createRoot(root).render(e(App));
+  </script>
 </body>
 </html>
